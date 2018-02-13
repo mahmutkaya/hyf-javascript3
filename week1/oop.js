@@ -35,11 +35,15 @@ class Movie {
     this.rating.push(rating);
   }
 
-  // getAverageRating() {
-  //   // add your code here
-  // }
+//   getAverageRating() {
+//     let ratingCal = 0;
+//     for (let i = 0; i < this.rating.length; i++) {
+//       ratingCal += this.rating[i];
+//     }
+//     const averageRaiting = ratingCal / this.rating.length;
+//     return averageRaiting;
+//   }
 
-  // ... Add yours :-) Look to IMDB for inspiration
 }
 
 class StaffMember {
@@ -63,20 +67,29 @@ class StaffMember {
     return this.role;
   }
 
-  // getAge() {
-  //   // add your code here
-  // }
+  getAge() {
+    const currentYear = new Date().getFullYear();
+    return currentYear - this.dateOfBirth;
+  }
 }
 
-// Pick your favorite movie from http://www.imdb.com/
+const myMovie = new Movie("Concussion", " Peter Landesman");
 
-const myMovie = new Movie('Concussion');
+const writer = new StaffMember(" Jeanne Marie Laskas", 'writer', '-');
 
-const firstActor = new StaffMember("Will Smith");
+const firstActor = new StaffMember("Will Smith", "star", 1968);
+const secondActor = new StaffMember("Alec Baldwin", "star", 1958);
+
+myMovie.addWriter(writer);
+
 myMovie.addStar(firstActor);
-// create and add more staff members
+myMovie.addStar(secondActor);
 
-// Make sure that the following actions work.
-console.log(myMovie.getStars().map(actor => `${actor.getName()} ${actor.getAge()}`));
-const director = myMovie.getDirector();
-// console.log(`Director: ${director.getName()}`);
+myMovie.addRating(7.1);
+
+// console.log(myMovie.getStars().map(actor => `${actor.getName()} ${actor.getAge()}`));
+
+// const director = myMovie.getDirector();
+// console.log(`Director: ${director}`);
+
+console.log(myMovie);
