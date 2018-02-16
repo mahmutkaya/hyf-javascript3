@@ -34,16 +34,6 @@ class Movie {
   addRating(rating) {
     this.rating.push(rating);
   }
-
-//   getAverageRating() {
-//     let ratingCal = 0;
-//     for (let i = 0; i < this.rating.length; i++) {
-//       ratingCal += this.rating[i];
-//     }
-//     const averageRaiting = ratingCal / this.rating.length;
-//     return averageRaiting;
-//   }
-
 }
 
 class StaffMember {
@@ -86,10 +76,5 @@ myMovie.addStar(firstActor);
 myMovie.addStar(secondActor);
 
 myMovie.addRating(7.1);
-
-// console.log(myMovie.getStars().map(actor => `${actor.getName()} ${actor.getAge()}`));
-
-// const director = myMovie.getDirector();
-// console.log(`Director: ${director}`);
 
 console.log(myMovie);
