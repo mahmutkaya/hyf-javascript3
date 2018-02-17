@@ -43,11 +43,11 @@ div2.id = 'div2';
 container.appendChild(div2);
 
 //button1: hyf-repos search
-button1.addEventListener("click", function() {
+button1.addEventListener("click", function () {
   console.log("loading is successful!");
   const ourReq = new XMLHttpRequest();
   ourReq.open("GET", apiPath + repos + hyf + "/" + srcInput.value);
-  ourReq.onload = function() {
+  ourReq.onload = function () {
     const ourData = JSON.parse(ourReq.responseText);
     console.log(ourData);
     getOneRepo(ourData);
@@ -81,15 +81,16 @@ function getOneRepo(data) {
     data.description +
     "</h3>" +
     "</div>";
+  div2.innerHTML = "";
   div2.insertAdjacentHTML("beforeEnd", htmlString);
 }
 
 //button2: hyf-repos full list
-button2.addEventListener("click", function() {
+button2.addEventListener("click", function () {
   console.log("button2; loading is successful!");
   const ourReq = new XMLHttpRequest();
   ourReq.open("GET", apiPath + users + hyf + repos);
-  ourReq.onload = function() {
+  ourReq.onload = function () {
     const ourData = JSON.parse(ourReq.responseText);
     console.log(ourData);
     getAllRepos(ourData);
@@ -126,15 +127,16 @@ function getAllRepos(data) {
       "</h3>" +
       "</div>";
   }
+  div2.innerHTML = "";
   div2.insertAdjacentHTML("beforeEnd", htmlString);
 }
 
 //button3: get users
-button3.addEventListener("click", function() {
+button3.addEventListener("click", function () {
   console.log("button3; loading is successful!");
   const ourReq = new XMLHttpRequest();
   ourReq.open("GET", apiPath + users + "/" + srcInput.value + repos);
-  ourReq.onload = function() {
+  ourReq.onload = function () {
     const ourData = JSON.parse(ourReq.responseText);
     console.log(ourData);
     getUsers(ourData);
@@ -144,9 +146,14 @@ button3.addEventListener("click", function() {
 
 function getUsers(data) {
   let htmlString = "";
-
+  htmlString =
+    "<div class='imgDiv'>" +
+    "<img src='" + data[0].owner.avatar_url + "'>" +
+    "<br>" +
+    "<h3>" + data[0].owner.login + " repositories: " + "</h3>" +
+    "</div>";
   for (let i = 0; i < data.length; i++) {
-    htmlString +=
+    htmlString += 
       "<div class='div3'>" +
       "<li><a target='_blank' href=" +
       data[i].html_url +
@@ -171,5 +178,6 @@ function getUsers(data) {
       "</h3>" +
       "</div>";
   }
+  div2.innerHTML = "";
   div2.insertAdjacentHTML("beforeEnd", htmlString);
 }
