@@ -4,6 +4,7 @@ const apiPath = "https://api.github.com";
 const users = "/users";
 const hyf = "/hackyourfuture";
 const repos = "/repos";
+const contr = "/contributors";
 
 const container = document.createElement("div");
 container.id = 'container';
@@ -42,18 +43,79 @@ const div2 = document.createElement("div");
 div2.id = 'div2';
 container.appendChild(div2);
 
+const div4 = document.createElement("div");
+div4.id = 'div4';
+container.appendChild(div4);
+
 //button1: hyf-repos search
 button1.addEventListener("click", function () {
   console.log("loading is successful!");
+
   const ourReq = new XMLHttpRequest();
-  ourReq.open("GET", apiPath + repos + hyf + "/" + srcInput.value);
+  const contributorsReq = new XMLHttpRequest();
+
+  ourReq.open("GET", apiPath + repos + hyf + "/" + srcInput.value, true); // true is for 'Asynchronous'
+
+  contributorsReq.open("GET", apiPath + repos + hyf + "/" + srcInput.value + contr, true);
+
   ourReq.onload = function () {
     const ourData = JSON.parse(ourReq.responseText);
+    const contrData = JSON.parse(contributorsReq.responseText);
+
     console.log(ourData);
+    console.log(contrData);
     getOneRepo(ourData);
+    getContr(contrData);
+  };
+  contributorsReq.send();
+  ourReq.send();
+});
+
+//button2: hyf-repos full list
+button2.addEventListener("click", function () {
+  console.log("button2; loading is successful!");
+
+  const ourReq = new XMLHttpRequest();
+
+  ourReq.open("GET", apiPath + users + hyf + repos, true);
+
+  ourReq.onload = function () {
+
+    const ourData = JSON.parse(ourReq.responseText);
+
+    console.log(ourData);
+    getAllRepos(ourData);
   };
   ourReq.send();
 });
+
+//button3: get users
+button3.addEventListener("click", function () {
+  console.log("button3; loading is successful!");
+  const ourReq = new XMLHttpRequest();
+  ourReq.open("GET", apiPath + users + "/" + srcInput.value + repos, true);
+  ourReq.onload = function () {
+    const ourData = JSON.parse(ourReq.responseText);
+    console.log(ourData);
+    getUsers(ourData);
+  };
+  ourReq.send();
+});
+
+function getContr(data2) {
+  let htmlContrString = "<h4> contributers: </h4>";
+  for (let cI = 0; cI < data2.length; cI++) {
+    htmlContrString +=
+    "<div class='div4'>" +
+      "<p>" + "<em>" +
+      data2[cI].login +
+      "</em>" + "</p>" +
+      "</div>";
+  }
+  div4.innerHTML = "";
+  div4.insertAdjacentHTML("beforeEnd", htmlContrString);
+
+}
 
 function getOneRepo(data) {
   let htmlString = "";
@@ -63,7 +125,7 @@ function getOneRepo(data) {
     data.html_url +
     ">" +
     data.name +
-    "</a></li>" +
+  "</a></li>" +
     "<p>" +
     " created date: " +
     data.created_at +
@@ -81,22 +143,9 @@ function getOneRepo(data) {
     data.description +
     "</h3>" +
     "</div>";
-  div2.innerHTML = "";
+  div2.innerHTML = ""; // for cleaning the page ======
   div2.insertAdjacentHTML("beforeEnd", htmlString);
 }
-
-//button2: hyf-repos full list
-button2.addEventListener("click", function () {
-  console.log("button2; loading is successful!");
-  const ourReq = new XMLHttpRequest();
-  ourReq.open("GET", apiPath + users + hyf + repos);
-  ourReq.onload = function () {
-    const ourData = JSON.parse(ourReq.responseText);
-    console.log(ourData);
-    getAllRepos(ourData);
-  };
-  ourReq.send();
-});
 
 function getAllRepos(data) {
   let htmlString = "";
@@ -120,7 +169,7 @@ function getAllRepos(data) {
       data[i].stargazers_count +
       " watch: " +
       data[i].watchers +
-      "<p>" +
+      "</p>" +
       "<h3>" +
       " Description: " +
       data[i].description +
@@ -131,19 +180,6 @@ function getAllRepos(data) {
   div2.insertAdjacentHTML("beforeEnd", htmlString);
 }
 
-//button3: get users
-button3.addEventListener("click", function () {
-  console.log("button3; loading is successful!");
-  const ourReq = new XMLHttpRequest();
-  ourReq.open("GET", apiPath + users + "/" + srcInput.value + repos);
-  ourReq.onload = function () {
-    const ourData = JSON.parse(ourReq.responseText);
-    console.log(ourData);
-    getUsers(ourData);
-  };
-  ourReq.send();
-});
-
 function getUsers(data) {
   let htmlString = "";
   htmlString =
@@ -153,7 +189,7 @@ function getUsers(data) {
     "<h3>" + data[0].owner.login + " repositories: " + "</h3>" +
     "</div>";
   for (let i = 0; i < data.length; i++) {
-    htmlString += 
+    htmlString +=
       "<div class='div3'>" +
       "<li><a target='_blank' href=" +
       data[i].html_url +
