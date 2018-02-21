@@ -47,72 +47,61 @@
   div4.id = "div4";
   container.appendChild(div4);
 
-  //button1: hyf-repos search
   button1.addEventListener("click", function() {
-    console.log("loading is successful!");
-
-    const ourReq = new XMLHttpRequest();
-    const contributorsReq = new XMLHttpRequest();
-
-    ourReq.open("GET", apiPath + repos + hyf + "/" + srcInput.value, true); // true is for 'Asynchronous'
-
-    contributorsReq.open(
-      "GET",
-      apiPath + repos + hyf + "/" + srcInput.value + contr,
-      true
+    console.log("button1 completed");
+    getData("GET", apiPath + repos + hyf + "/" + srcInput.value).then(
+      function(data) {
+        console.log(data);
+        const ourData = JSON.parse(data);
+        getOneRepo(ourData);
+      }
     );
-
-    ourReq.onload = function() {
-      const ourData = JSON.parse(ourReq.responseText);
-      const contrData = JSON.parse(contributorsReq.responseText);
-
-      console.log(ourData);
-      console.log(contrData);
-      getOneRepo(ourData);
-      getContr(contrData);
-    };
-    contributorsReq.send();
-    ourReq.send();
+    getData("GET", apiPath + repos + hyf + "/" + srcInput.value + contr)
+      .then(function(data) {
+        console.log(data);
+        const contrData = JSON.parse(data);
+        getContr(contrData);
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
   });
 
-  //button2: hyf-repos full list
   button2.addEventListener("click", function() {
-    console.log("button2; loading is successful!");
-
-    const ourReq = new XMLHttpRequest();
-
-    ourReq.open("GET", apiPath + users + hyf + repos, true);
-
-    ourReq.onload = function() {
-      const ourData = JSON.parse(ourReq.responseText);
-
-      console.log(ourData);
-      getAllRepos(ourData);
-    };
-    ourReq.send();
+    console.log("button2 completed");
+    getData("GET", apiPath + users + hyf + repos)
+      .then(function(data) {
+        console.log(data);
+        const allRepo = JSON.parse(data);
+        getAllRepos(allRepo);
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
   });
 
-  //button3: get users
   button3.addEventListener("click", function() {
-    console.log("button3; loading is successful!");
-    const ourReq = new XMLHttpRequest();
-    ourReq.open("GET", apiPath + users + "/" + srcInput.value + repos, true);
-    ourReq.onload = function() {
-      const ourData = JSON.parse(ourReq.responseText);
-      console.log(ourData);
-      getUsers(ourData);
-    };
-    ourReq.send();
+    console.log("button3 completed");
+    getData("GET", apiPath + users + "/" + srcInput.value + repos)
+      .then(function(data) {
+        console.log(data);
+        const usersRepo = JSON.parse(data);
+        getUsers(usersRepo);
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
   });
 
-  function getContr(data2) {
-    let htmlContrString = "<h4> contributers: </h4>";
-    for (let cI = 0; cI < data2.length; cI++) {
+  function getContr(data) {
+    let htmlContrString = "";
+    htmlContrString = "<h4> contributors: </h4>";
+    for (let cI = 0; cI < data.length; cI++) {
       htmlContrString +=
         "<div class='div4'>" +
         "<p>" +
         "<em>" +
-        data2[cI].login +
+        data[cI].login +
         "</em>" +
         "</p>" +
         "</div>";
@@ -147,15 +136,14 @@
       data.description +
       "</h3>" +
       "</div>";
-    div2.innerHTML = ""; // for cleaning the page ======
+    div2.innerHTML = "";
     div2.insertAdjacentHTML("beforeEnd", htmlString);
   }
 
   function getAllRepos(data) {
-    let htmlString = "";
-
+    let AllRepoString = "";
     for (let i = 0; i < data.length; i++) {
-      htmlString +=
+      AllRepoString +=
         "<div class='div3'>" +
         "<li><a target='_blank' href=" +
         data[i].html_url +
@@ -180,13 +168,14 @@
         "</h3>" +
         "</div>";
     }
+    div4.innerHTML = "";
     div2.innerHTML = "";
-    div2.insertAdjacentHTML("beforeEnd", htmlString);
+    div2.insertAdjacentHTML("beforeEnd", AllRepoString);
   }
 
   function getUsers(data) {
-    let htmlString = "";
-    htmlString =
+    let userString = "";
+    userString =
       "<div class='imgDiv'>" +
       "<img src='" +
       data[0].owner.avatar_url +
@@ -198,7 +187,7 @@
       "</h3>" +
       "</div>";
     for (let i = 0; i < data.length; i++) {
-      htmlString +=
+      userString +=
         "<div class='div3'>" +
         "<li><a target='_blank' href=" +
         data[i].html_url +
@@ -223,7 +212,32 @@
         "</h3>" +
         "</div>";
     }
+    div4.innerHTML = "";
     div2.innerHTML = "";
-    div2.insertAdjacentHTML("beforeEnd", htmlString);
+    div2.insertAdjacentHTML("beforeEnd", userString);
+  }
+
+  function getData(method, url) {
+    return new Promise(function(resolve, reject) {
+      const xhr = new XMLHttpRequest();
+      xhr.open(method, url);
+      xhr.onload = function() {
+        if (this.status >= 200 && this.status < 300) {
+          resolve(xhr.response);
+        } else {
+          reject({
+            status: this.status,
+            statusText: xhr.statusText
+          });
+        }
+      };
+      xhr.onerror = function() {
+        reject({
+          status: this.status,
+          statusText: xhr.statusText
+        });
+      };
+      xhr.send();
+    });
   }
 }
