@@ -48,17 +48,15 @@
   container.appendChild(div4);
 
   button1.addEventListener("click", function() {
-    console.log("button1 completed");
-    getData("GET", apiPath + repos + hyf + "/" + srcInput.value).then(
-      function(data) {
-        console.log(data);
-        const ourData = JSON.parse(data);
-        getOneRepo(ourData);
-      }
-    );
+    getData("GET", apiPath + repos + hyf + "/" + srcInput.value).then(function(
+      data
+    ) {
+      console.log(data);
+      const ourData = JSON.parse(data);
+      getOneRepo(ourData);
+    });
     getData("GET", apiPath + repos + hyf + "/" + srcInput.value + contr)
       .then(function(data) {
-        console.log(data);
         const contrData = JSON.parse(data);
         getContr(contrData);
       })
@@ -68,10 +66,8 @@
   });
 
   button2.addEventListener("click", function() {
-    console.log("button2 completed");
     getData("GET", apiPath + users + hyf + repos)
       .then(function(data) {
-        console.log(data);
         const allRepo = JSON.parse(data);
         getAllRepos(allRepo);
       })
@@ -81,10 +77,8 @@
   });
 
   button3.addEventListener("click", function() {
-    console.log("button3 completed");
     getData("GET", apiPath + users + "/" + srcInput.value + repos)
       .then(function(data) {
-        console.log(data);
         const usersRepo = JSON.parse(data);
         getUsers(usersRepo);
       })
