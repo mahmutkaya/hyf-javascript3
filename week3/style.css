@@ -82,7 +82,7 @@ button {
   display: grid;
   justify-content: center;
   grid-template-columns: 30% 30% 30%;
-  grid-template-rows: 50% 50%;
+  /* grid-template-rows: 50% 50%; */
 }
 
 .div3 {
@@ -117,7 +117,7 @@ button {
   grid-column: 1 / 4;
   width: 50%;
   justify-self: center;
-  margin-bottom: 5%;
+  /* margin-bottom: 5%; */
 }
 
 img {
